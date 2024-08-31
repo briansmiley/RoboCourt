@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { GameService } from "../services/game/service";
+import { HonchoService } from "../services/honcho/service";
 
 const router = express.Router();
 
@@ -27,8 +28,19 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
+router.get('/:id/messages', async (req: Request, res: Response) => {
+    const gameId = req.params.id;
+    const gameState = await GameService().get(gameId);
+    try {
+        const messages = await HonchoService().getMessageContents(gameState.honchoDefendant);
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-router.post('/:id/message', async (req: Request, res: Response) => {
+
+router.post('/:id/newMessage', async (req: Request, res: Response) => {
     const gameId = req.params.id;
     const { message } = req.body;
     const gameState = await GameService().get(gameId);
