@@ -1,4 +1,6 @@
-export interface GameService {
-  create(gameState: GameState): Promise<GameState>;
+import { GameState } from "../../../../shared/schemas/game";
+
+export interface IGameService {
+  create(): Promise<GameState>;
   get(id: string): Promise<GameState>;
 }
