@@ -41,6 +41,13 @@ export const GameService = (): IGameService => ({
 
 
     },
+    get: async (id: string) => {
+        const gameState = await redis.get(id);
+        if (!gameState) {
+            throw new Error(`Game with ID ${id} not found`);
+        }
+        return JSON.parse(gameState);
+    },
     processMessage: async (message: string, gameState: GameState) => {
         const { appId, userId, sessionId } = gameState.honchoDefendant;
         // this is the user's input message
