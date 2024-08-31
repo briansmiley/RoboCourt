@@ -1,5 +1,5 @@
 import { GameState } from "../../../../shared/schemas/game";
-import honcho from "../../ai/honchoClient";
+import honcho from "../../../utils/honchoClient";
 import { IGameService } from "./interface";
 import { CoreMessage, generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
@@ -14,7 +14,7 @@ export const GameService = (): IGameService => ({
 
         // in the redis cache, create a new game with a unique id 
         // store the game state according to the schema
-        const gameId = `game:${randomUUID()}`;
+        const gameId = randomUUID();
         const newGameState: GameState = {
             // ... initialize your game state according to the schema
             id: gameId,
@@ -32,7 +32,7 @@ export const GameService = (): IGameService => ({
             gameStage: "prelude"
         };
 
-        await redis.set(gameId, JSON.stringify(newGameState));
+        await redis.set(`game:${gameId}`, JSON.stringify(newGameState));
 
         // Add the game ID to a list of games
         await redis.lpush('games:list', gameId);
