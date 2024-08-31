@@ -9,23 +9,41 @@ const makeNewGame = async () => {
   return newGame;
 };
 function App() {
-  const [gameState, setGameState] = useState<GameState | "Loading...">(
-    "Loading..."
-  );
+  // const [loading, setLoading] = useState(true);
+  const [showGame, setShowGame] = useState(false);
+  const [gameState, setGameState] = useState<GameState | null>(null);
+  const [fadeIn, setFadeIn] = useState(false);
+
   useEffect(() => {
-    makeNewGame().then(setGameState);
+    makeNewGame().then(newGameState => {
+      setGameState(newGameState);
+      // Trigger fade-in effect after a short delay
+      setTimeout(() => setFadeIn(true), 100);
+    });
   }, []);
+
   return (
-    <>
-      {gameState === "Loading..." ? (
-        <div className="fixed inset-0 w-full h-full flex-col bg-black font-mono text-5xl text-green-500 flex items-center justify-center">
-          <span>Loading...</span>
-          <Gavel size={50} />
-        </div>
+    <div className="fixed inset-0 flex flex-col items-center justify-center font-mono text-5xl text-green-500 w-full h-full bg-black">
+      {!showGame ? (
+        gameState ? (
+          <button
+            className={`border-green-500 p-2 text-5xl flex flex-col items-center justify-center ${
+              fadeIn ? "opacity-100" : "opacity-0"
+            } transition-opacity duration-[3000ms]`}
+            onClick={() => setShowGame(true)}
+          >
+            <span>Start</span>
+            <Gavel size={50} />
+          </button>
+        ) : (
+          <div className="fixed inset-0  flex-col  flex items-center justify-center">
+            ...Loading
+          </div>
+        )
       ) : (
-        <RoboCourt gameState={gameState} />
+        gameState && <RoboCourt gameState={gameState} />
       )}
-    </>
+    </div>
   );
 }
 
