@@ -17,9 +17,9 @@ export const GameService = (): IGameService => ({
 
         const newHonchoUserMessage =
             await honcho.apps.users.sessions.messages.create(
-                gameState.honchoDefendant.appId,
-                gameState.honchoDefendant.userId,
-                gameState.honchoDefendant.sessionId,
+                appId,
+                userId,
+                sessionId,
                 {
                     content: message,
                     is_user: true
