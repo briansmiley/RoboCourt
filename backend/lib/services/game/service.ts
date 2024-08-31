@@ -42,7 +42,7 @@ export const GameService = (): IGameService => ({
 
     },
     get: async (id: string) => {
-        const gameState = await redis.get(id);
+        const gameState = await redis.get(`game:${id}`);
         if (!gameState) {
             throw new Error(`Game with ID ${id} not found`);
         }
