@@ -1,13 +1,21 @@
-import { HonchoMessageList } from "../lib/services/honcho/interface"
+import { CoreAssistantMessage, CoreMessage, CoreUserMessage } from "ai";
+import { PageMessage } from "honcho-ai/resources/apps/users/sessions/messages";
+export const formatForVercel = (messages: PageMessage): CoreMessage[] => {
 
-export const formatForVercel = (messages: HonchoMessageList) => {
 
-    const formattedMessages = messages.flatMap(page =>
-        page.items.map(message => ({
-            role: message.is_user ? 'user' : 'assistant',
-            content: message.content
-        }))
-    ).flat(); // Flatten the array if you want a single array of messages
+    const formattedMessages: CoreMessage[] = messages.items.map(message => {
+        if (message.is_user) {
+            return {
+                role: "user",
+                content: message.content
+            }
+        } else {
+            return {
+                role: "assistant",
+                content: message.content
+            }
+        }
+    });
 
     return formattedMessages;
 

@@ -1,6 +1,6 @@
 import { GameState, Verdict } from "../../../../shared/schemas/game";
 import { IGameService } from "./interface";
-import { generateText } from "ai";
+import { CoreMessage, generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { HonchoService } from "../honcho/service";
 import { formatForVercel } from "../../../utils/formatForVercel";
@@ -65,8 +65,7 @@ export const GameService = (): IGameService => ({
       userId,
       sessionId
     });
-    const formattedMessages = formatForVercel(honchoMessages);
-
+    const formattedMessages: CoreMessage[] = formatForVercel(honchoMessages);
     const aiResponse = await generateText({
       model: anthropic("claude-3-5-sonnet-20240620"),
       messages: formattedMessages
