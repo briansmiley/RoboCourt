@@ -1,6 +1,7 @@
 import { Session } from "honcho-ai/resources/apps/users/sessions/sessions.mjs";
 import { Page } from "honcho-ai/pagination";
 import { Message } from "honcho-ai/resources/apps/users/sessions/messages";
+import { HonchoDefendant } from "../../../../shared/schemas/game";
 
 export type HonchoIdProps = {
   appId: string;
@@ -11,7 +12,7 @@ export type HonchoIdProps = {
 export type HonchoMessageList = Page<Message>;
 
 export interface IHonchoService {
-  create(): Promise<Session>;
+  create(): Promise<HonchoDefendant>;
   getMessageContents: ({
     appId,
     userId,
