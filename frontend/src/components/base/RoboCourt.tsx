@@ -1,4 +1,6 @@
-import { useState } from "react";
+import soundEffect from "./l&o.mp3";
+
+import { useEffect, useState } from "react";
 import { GameState } from "../../../../shared/schemas/game";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -8,6 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 //   const messages: string[] = await res.json();
 //   return messages;
 // };
+const sound = new Audio(soundEffect);
 export default function RoboCourt({ gameState }: { gameState: GameState }) {
   console.log(JSON.stringify(gameState));
   const [messages, setMessages] = useState<string[]>([gameState.dossier]);
@@ -32,10 +35,13 @@ export default function RoboCourt({ gameState }: { gameState: GameState }) {
         setInput("");
       });
   };
-
+  useEffect(() => {
+    console.log("playing sound");
+    sound.play();
+  }, []);
   return (
     <div
-      className="text-lime-300 h-screen overflow-hidden w-screen relative bg-black p-10 flex flex-col"
+      className="text-lime-300  h-screen overflow-hidden w-screen relative bg-black p-10 flex flex-col"
       style={{ fontFamily: "Courier New, monospace" }}
     >
       <h1 className="text-lime-300 text-4xl font-bold mb-2">RoboCourt</h1>
@@ -52,9 +58,11 @@ export default function RoboCourt({ gameState }: { gameState: GameState }) {
         }}
         className="flex flex-col"
       >
-        {messages.map((message, index: number) => (
-          <span key={index}>-{message}</span>
-        ))}
+        <div className="flex text-lg flex-col gap-3 ">
+          {messages.map((message, index: number) => (
+            <span key={index}>-{message}</span>
+          ))}
+        </div>
         {/* This div will be used to scroll into view */}
       </div>
       <form
