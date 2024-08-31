@@ -14,8 +14,9 @@ export const CaseFactsSchema = z.object({
   objectiveFacts: z.string()
 });
 export const HonchoDefendantSchema = z.object({
-  defendantAppId: z.string(),
-  userId: z.string()
+  appId: z.string(),
+  userId: z.string(),
+  sessionId: z.string(),
 });
 export const GameStateSchema = z.object({
   id: z.string(),

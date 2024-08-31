@@ -1,7 +1,7 @@
 import honchoClient from "../../../utils/honchoClient";
-import { IHonchoService } from "./interface";
+import { HonchoIdProps, IHonchoService } from "./interface";
 
-const HonchoService = (): IHonchoService => ({
+export const HonchoService = (): IHonchoService => ({
   create: async () => {
     const uniqueAppName = `Defendant_${new Date().getTime()}`;
     const app = await honchoClient.apps.getOrCreate(uniqueAppName);
@@ -14,7 +14,14 @@ const HonchoService = (): IHonchoService => ({
       { metadata: { location_id: "default" } }
     );
     return session;
+  },
+  getMessageContents: async ({ appId, userId, sessionId }: HonchoIdProps) => {
+    //client.apps.users.sessions.messages.list(appId, userId, sessionId, { ...params }) -> MessagesPage
+    const result = await honchoClient.apps.users.sessions.messages.list(
+      appId,
+      userId,
+      sessionId
+    );
+    return result;
   }
 });
-
-export default HonchoService;
