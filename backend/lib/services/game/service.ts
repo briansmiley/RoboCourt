@@ -5,8 +5,42 @@ import { CoreMessage, generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { HonchoService } from "../honcho/service";
 import { formatForVercel } from "../../../utils/formatForVercel";
+import redis from "../../../utils/redisClient";
+import { randomUUID } from "crypto";
+
 
 export const GameService = (): IGameService => ({
+    create: async () => {
+
+        // in the redis cache, create a new game with a unique id 
+        // store the game state according to the schema
+        const gameId = `game:${randomUUID()}`;
+        const newGameState: GameState = {
+            // ... initialize your game state according to the schema
+            id: gameId,
+            startTime: new Date(),
+            caseFacts: {
+                trueVerdict: "guilty",
+                objectiveFacts: "The defendant is guilty of the crime."
+            },
+            dossier: "The defendant is guilty of the crime.",
+            honchoDefendant: {
+                appId: "Defendant",
+                userId: "Parth Agrawal",
+                sessionId: "1234567890"
+            },
+            gameStage: "prelude"
+        };
+
+        await redis.set(gameId, JSON.stringify(newGameState));
+
+        // Add the game ID to a list of games
+        await redis.lpush('games:list', gameId);
+
+        return newGameState
+
+
+    },
     processMessage: async (message: string, gameState: GameState) => {
         const { appId, userId, sessionId } = gameState.honchoDefendant;
         // this is the user's input message
