@@ -1,5 +1,6 @@
+import Honcho from "honcho-ai";
 import honchoClient from "../../../utils/honchoClient";
-import { HonchoIdProps, IHonchoService } from "./interface";
+import { IHonchoService } from "./interface";
 
 export const HonchoService = (): IHonchoService => ({
   create: async () => {
@@ -13,9 +14,13 @@ export const HonchoService = (): IHonchoService => ({
       user.id,
       { metadata: { location_id: "default" } }
     );
-    return session;
+    return {
+      appId: app.id,
+      userId: user.id,
+      sessionId: session.id
+    };
   },
-  getMessageContents: async ({ appId, userId, sessionId }: HonchoIdProps) => {
+  getMessageContents: async ({ appId, userId, sessionId }) => {
     //client.apps.users.sessions.messages.list(appId, userId, sessionId, { ...params }) -> MessagesPage
     const result = await honchoClient.apps.users.sessions.messages.list(
       appId,

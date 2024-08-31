@@ -1,5 +1,5 @@
-import { GameState } from "../../../../shared/schemas/game";
 import honcho from "../../../utils/honchoClient";
+import { GameState, Verdict } from "../../../../shared/schemas/game";
 import { IGameService } from "./interface";
 import { CoreMessage, generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
@@ -12,6 +12,29 @@ import { randomUUID } from "crypto";
 export const GameService = (): IGameService => ({
     create: async () => {
 
+        const honchoDefendant = await HonchoService().create();
+        const trueVerdict: Verdict = Math.random() > 0.5 ? "guilty" : "innocent";
+        const objectiveFactsResponse = await generateText({
+            model: anthropic("claude-3-5-sonnet-20240620"),
+            system: `We are playing a RPG wherein the user is playing as a judge/jury, interrogating a defendant. In this instance, the defendant
+            is ${trueVerdict}.`,
+            prompt: `Create a fictional court case for this game. The user is going to interact and ask questions, attempting to determing the guilt
+          of the defendant. For now, we are just establishing a (secret) ground truth about the case; so generate a 300 word or so description of an
+          interesting case. Give all the OBJECTIVE FACTS about the case from an omniscient perspective, so that this response can be used
+          as a reference later on when roleplaying as the defendant. In this instance, the defendant should be ${trueVerdict}.
+          `
+        });
+        const objectiveFacts = objectiveFactsResponse.text;
+        const dossierResponse = await generateText({
+            model: anthropic("claude-3-5-sonnet-20240620"),
+            system: `We are playing a RPG wherein the user is playing as a judge/jury, interrogating a defendant. In this instance, the defendant
+      is ${trueVerdict}. We previously established these as the "objective facts" behind the scenes, not all of which the user should know: ${objectiveFacts}`,
+            prompt: `Generate a dossier summarizing the case for the user, giving them baseline background from which to begin
+      their investigation. Do not reveal information from the objective facts the defendant would have concealed or that gives away the answer. Make this interesting and succinct (~300 words).`
+        });
+        const dossier = dossierResponse.text;
+
+
         // in the redis cache, create a new game with a unique id 
         // store the game state according to the schema
         const gameId = randomUUID();
@@ -19,16 +42,9 @@ export const GameService = (): IGameService => ({
             // ... initialize your game state according to the schema
             id: gameId,
             startTime: new Date(),
-            caseFacts: {
-                trueVerdict: "guilty",
-                objectiveFacts: "The defendant is guilty of the crime."
-            },
-            dossier: "The defendant is guilty of the crime.",
-            honchoDefendant: {
-                appId: "Defendant",
-                userId: "Parth Agrawal",
-                sessionId: "1234567890"
-            },
+            honchoDefendant,
+            caseFacts: { trueVerdict, objectiveFacts },
+            dossier,
             gameStage: "prelude"
         };
 

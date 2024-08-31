@@ -28,8 +28,6 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 
-
-
 router.post('/:id/message', async (req: Request, res: Response) => {
     const gameId = req.params.id;
     const { message } = req.body;
