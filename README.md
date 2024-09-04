@@ -1,47 +1,15 @@
-// Vite + Express App with No Auth
+Demo: [video](https://photos.google.com/u/1/photo/AF1QipO4iVhV4R9lMumizQHuiRTydm3eECwHLGZGymTM)
 
-## General
-- If you selected yes to the database question: docker is running, it just isn't shown in the terminal
-- If a file is in the gitignore but isn't greyed out, try the following:
-    1. delete and then retype a letter of the filename in the gitignore, save the gitignore file.
-    2. No luck? Reload the developer window.
-    3. No luck? The .env is probably in the staging area of git. Unstage it.
-    4. Still no luck? Look it up or ask for help. (sorry lol)
-- Note that a git repo has been initialized in the root directory of your project!
+Deploy: (coming soon)
 
-## Frontend
-#### Notes
-- If you want to use process.env.[secret], you will need to define it in the vite.config.ts file under where I've defined the API_URL.
-- IF USING SHADCN: to add a new component run `npx shadcn-ui@latest add <component_name>`
+RoboCourt is a courtroom simulator game. You play a judge seeking truth by interrogating an AI defendant. RoboCourt uses [Honcho](https://github.com/plastic-labs/honcho?tab=readme-ov-file) to store conversation history.
 
-#### To run frontend:
-1. In terminal: npm run dev
+This is a quick MVP made for the [AI Infinite Games (Reloaded) Hackathon at Fractal Tech. ](https://lu.ma/ai_infinite_games_reloaded). Future iterations of this game: 
 
-#### To connect to your backend:
-1. Add your backend's url to the frontend .env file
-2. Add this to your package.json: "proxy": "backend url",
+Future iterations of this game:
 
-## Backend
-#### Notes
+1) an LA-Noire style detective game/murder mystery where you're investigating crimes and have to interview various suspects. over time as Honcho learns more and more about you as a detective, the suspect agents get tougher and learn to pull on your heartstrings in just the perfect way to fool you, etc. (this is probably the easiest to get to from this demo) 
 
-- I added a user with auth object to the request object in the backend by declaring it in the global.d.ts file.
-  You may need to go into the ./utils/global.d.ts file and delete a line, then add it back in and save the file in order for
-  the global type to be recognized.
-  
-#### To run backend: 
-1. Go to package.json
-2. Add this script: "start": "nodemon index.ts"
-3. In terminal: npm run start
+2) you're a judge hearing cases. you're presented with facts, there are two agents, a prosecution and a defense, they make their cases. you choose which side was more convincing. over time the agents develop a strong theory of mind for you as a judge, and their arguments get more and more convincing. maybe it's a full courtroom drama with witnesses to interview, etc. 
 
-#### To connect to your frontend:
-1. In the app.ts file add your frontend's url as an origin in the cors object
-
-## Resources
-- Express: https://expressjs.com/en/guide/routing.html
-- Docker: https://docs.docker.com/guides/
-- Vite: https://vitejs.dev/guide/
-- Prisma: https://www.prisma.io/docs
-- Tailwind: https://tailwindcss.com/docs
-- DaisyUI: https://daisyui.com/docs
-- Shadcn UI: https://ui.shadcn.com/docs
-
+3) papers-please style bureaucracy, maybe you're a ruler, maybe you're still the judge. essentially, the game forces you to make ethical tradeoffs that are tougher and tougher. it starts easy - take money from the treasury to give to the poor? and then it gets harder and harder. pardon a serial killer with dependent children? give donated organs to a respected elder or a sickly child? etc. basically becomes an expert tormentor for the player specifically
